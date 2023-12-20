@@ -1,13 +1,17 @@
 import $ from "jquery";
 import GameObject from "./gameObject/GameObject";
-import Carta from "./gameObject/Carta";
 import Input from "./UI/Input";
 import Caminhos from "../Caminhos";
+import Imagem from "./spriteSheet/Imagem";
+import Baralho from "./gameObject/Baralho";
+import Pilha from "./gameObject/Pilha";
+import Player from "./gameObject/Player";
 
 export default class Games{
 
     public static ctx:CanvasRenderingContext2D
-
+    
+    quantidadeCartas:number = 5
     gameObjects:GameObject[] = []
 
     update(){
@@ -47,11 +51,25 @@ export default class Games{
         canvas.height = globalThis.innerHeight;
         
         Games.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+        const imagemBaralho = new Imagem({x:0,y:0,width:71,height:101},"./src/game/assets/do_meu_avo2.png");
         
-        const carta = new Carta(20,20,50,70);
+        const baralho = new Baralho(imagemBaralho);
 
-        this.gameObjects.push(carta)
+        baralho.embaralhar()
 
-        this.loop()
+        const monte = new Pilha(20,20,baralho.cartas,"monte");
+
+        const player = new Player(200,200,0,0,"player1");
+
+        for (let i = 0; i < this.quantidadeCartas; i++) {
+
+            player.receberCarta(monte.tirarUltima());
+        }
+        
+        this.gameObjects.push(monte);
+        this.gameObjects.push(player);
+
+        this.loop();
     }
 }

@@ -1,18 +1,18 @@
 import $ from "jquery"
 import {io} from "socket.io-client"
+import Cookies from "js-cookie"
 import Caminhos from "./Caminhos";
-// import Games from "./game/Games";
+import Games from "./game/Games";
 import Input from "./game/UI/Input";
 import View from "./view/View";
-
 
 let sessionID:string | undefined;
 let magicNumber:number = Math.random();
 let currentRoom:string | null = null;
 let currentScene:string = "mainMenu";
 
-View.start()
-View.update(currentScene, true);
+// View.start()
+// View.update(currentScene, true);
 
 Caminhos.socket = io()
 
@@ -30,9 +30,19 @@ Caminhos.socket.on("sus", a =>{
   console.log(a);
   
 })
+Caminhos.socket.on("entrar sala", sala =>{
+  
+  let host = sala.host as string
 
-// const game = new Games()
-// game.start()
+  if(host == Cookies.get("userID")){
+
+    console.log("tu é o host");
+    
+  }
+})
+
+const game = new Games()
+game.start()
 
 $(()=>{ //Quando carregar a página ele vai tentar procurar a sala na url para entrar
   let queryString = window.location.search
@@ -69,4 +79,3 @@ $("#canvinhas").on("mousemove", (e) =>{
   Input.y = e.clientY;
   
 })
-
