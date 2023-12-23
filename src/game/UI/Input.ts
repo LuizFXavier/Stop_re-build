@@ -6,5 +6,5 @@ export default class Input{
     public static width:number = 1;
     public static height:number = 1;
 
-    public static clicou?:boolean = false;
+    public static clicou:boolean = false;
 }

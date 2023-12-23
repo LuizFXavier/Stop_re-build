@@ -8,21 +8,24 @@ export default class Carta extends GameObject{
     public static largura:number = 71;
     public static altura:number = 101;
 
-    
     viradaPBaixo:boolean = false;
     selected:boolean = false;
-    imagem: Imagem;
+    imagem: Imagem | undefined;
     naipe:string;
     valor:number;
-    corteImagem:{x:number, y:number, width:number, heigh:number};
+    corteImagem:{x:number, y:number, width:number, heigh:number} | undefined;
     
 
-    constructor(x:number, y:number, naipe:string, valor:number, imagem: Imagem, tag?:string){
+    constructor(x:number, y:number, naipe:string, valor:number, imagem?: Imagem, tag?:string){
 
         super(x, y, Carta.largura, Carta.altura,tag);
 
-        this.imagem = imagem;
-        this.corteImagem = {x:imagem.x, y:imagem.y, width:imagem.width, heigh:imagem.height};
+        if(imagem){
+
+            this.imagem = imagem;
+            this.corteImagem = {x:imagem.x, y:imagem.y, width:imagem.width, heigh:imagem.height};
+        }
+
         this.naipe = naipe;
         this.valor = valor;
         
@@ -32,6 +35,10 @@ export default class Carta extends GameObject{
         this.colisao()
     }
     render(): void {
+
+        if(!this.imagem || !this.corteImagem){
+            return
+        }
 
         if(this.viradaPBaixo){
             this.imagem.x = Carta.largura * 13;
@@ -53,8 +60,8 @@ export default class Carta extends GameObject{
         if (colisor && Input.clicou){
             // this.x = Math.floor(Math.random() * 13.9) * 71
             // this.y = Math.floor(Math.random() * 3.9) * 101
-            this.virar()
-            return this
+            //this.virar()
+            return this 
         }
     }
     virar(){

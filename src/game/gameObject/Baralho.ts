@@ -6,6 +6,7 @@ export default class Baralho{
     public static naipes:string[] = ["PAUS","OUROS","COPAS","ESPADAS"]
     cartas:Carta[] = []
     
+    public static cartaNula:Carta = new Carta(0,0,"",-1)
     
     constructor(imagem:Imagem){
 

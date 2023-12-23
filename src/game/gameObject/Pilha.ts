@@ -1,3 +1,4 @@
+import Baralho from "./Baralho";
 import Carta from "./Carta";
 import GameObject from "./GameObject";
 
@@ -5,11 +6,18 @@ export default class Pilha extends GameObject{
 
     cartas:Carta[] = []
 
-    constructor(x:number, y:number, cartas:Carta[], tag?:string){
+    constructor(x:number, y:number, tag?:string, cartas?:Carta[]){
 
         super(x,y,0,0,tag)
 
-        this.cartas = cartas;
+        if(cartas){
+
+            for(let i = 0; i < cartas.length; i++){
+                this.porCarta(cartas[i])
+            }
+        }else{
+            this.porCarta(Baralho.cartaNula)
+        }
     }
 
     update(): void {
@@ -22,15 +30,21 @@ export default class Pilha extends GameObject{
 
     colisao(){
         if(this.getUltima().colisao()){
-            
-            console.log(this.cartas.pop());
-            
+            return true
         }
+
+        return false;
     }
 
     getUltima(): Carta{
 
         return this.cartas[this.cartas.length - 1]
+    }
+    porCarta(carta:Carta){
+        carta.x = this.x;
+        carta.y = this.y;
+
+        this.cartas.push(carta)
     }
 
     tirarUltima(): Carta{

@@ -41,8 +41,7 @@ Caminhos.socket.on("entrar sala", sala =>{
   }
 })
 
-const game = new Games()
-game.start()
+Games.start()
 
 $(()=>{ //Quando carregar a página ele vai tentar procurar a sala na url para entrar
   let queryString = window.location.search

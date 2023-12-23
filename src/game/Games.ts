@@ -6,34 +6,66 @@ import Imagem from "./spriteSheet/Imagem";
 import Baralho from "./gameObject/Baralho";
 import Pilha from "./gameObject/Pilha";
 import Player from "./gameObject/Player";
+import Interface from "./UI/Interface";
+import Botao from "./UI/Botao";
 
 export default class Games{
 
-    public static ctx:CanvasRenderingContext2D
+    public static ctx:CanvasRenderingContext2D;
+    public static vez:number = 0;
     
-    quantidadeCartas:number = 5
-    gameObjects:GameObject[] = []
+    public static quantidadeCartas:number = 5
+    public static gameObjects:GameObject[] = []
+    public static interfaces:Interface[] = []
 
-    update(){
-        this.gameObjects.forEach(e =>{
+    public static getGameObjectByTag(tag:string){
+
+        for(let i = 0; i < this.gameObjects.length; i++){
+
+            if(this.gameObjects[i].tag === tag){
+                return this.gameObjects[i];
+            }
+        }
+        return null
+    }
+    public static getInterfaceByTag(tag:string){
+
+        for(let i = 0; i < this.interfaces.length; i++){
+
+            if(this.interfaces[i].tag === tag){
+                return this.interfaces[i];
+            }
+        }
+        return null
+    }
+
+    public static update(){
+        Games.gameObjects.forEach(e =>{
             e.update()
+        })
+        Games.interfaces.forEach(e =>{
+            e.update();
         })
     }
 
-    render(){
+    public static render(){
 
         Games.ctx.clearRect(0,0,window.innerWidth,window.innerHeight)
-        this.gameObjects.forEach(e =>{
+        Games.gameObjects.forEach(e =>{
+            e.render()
+        })
+
+        Games.interfaces.forEach(e=>{
             e.render()
         })
     }
 
-    loop(){
+    public static loop(){
         this.render()
         this.update()
 
         if (Input.clicou) {
-
+            
             Input.clicou = !Input.clicou
         }
 
@@ -42,7 +74,8 @@ export default class Games{
         window.requestAnimationFrame(() => this.loop())
     }
 
-    start():void{
+    public static start():void{
+
         $("#app").append("<canvas id='canvinhas'></canvas>");
 
         const canvas = $("#canvinhas")[0] as HTMLCanvasElement;
@@ -58,17 +91,23 @@ export default class Games{
 
         baralho.embaralhar()
 
-        const monte = new Pilha(20,20,baralho.cartas,"monte");
+        const monte = new Pilha(20,20,"monte",baralho.cartas);
+        const descarte = new Pilha(canvas.width / 2, canvas.height * 0.1,"descarte")
 
-        const player = new Player(200,200,0,0,"player1");
+        const player = new Player(canvas.width *0.25, canvas.height * 0.25,0,0,"player1");
 
         for (let i = 0; i < this.quantidadeCartas; i++) {
 
             player.receberCarta(monte.tirarUltima());
         }
         
-        this.gameObjects.push(monte);
-        this.gameObjects.push(player);
+        Games.gameObjects.push(monte);
+        Games.gameObjects.push(descarte);
+        Games.gameObjects.push(player);
+
+        const botaoDescartar = new Botao(player.x * 0.5, player.y, 40,25,"botao descarte","#E31A51")
+
+        Games.interfaces.push(botaoDescartar);
 
         this.loop();
     }

@@ -32,6 +32,29 @@ export default class Mao extends GameObject{
         }
     }
 
+    colisao(){ //Retorna o index da carta que foi clicada e -1 caso nenhuma for
+
+        let carta = undefined;
+
+        for(let i = 0; i < this.cartas.length; i++){
+
+            carta = this.cartas[i].colisao();
+
+            if (carta) return i;
+        }
+        return -1;
+    }
+
+    mudarCarta(carta:Carta, index:number){
+
+        this.cartas[index] = carta;
+        this.arrumarCartas()
+    }
+
+    getCarta(index:number){
+        return this.cartas[index]
+    }
+
     arrumarCartas(){
         for (let i = 0; i < this.cartas.length; i++){
             
